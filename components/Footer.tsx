@@ -56,7 +56,7 @@ const socialIcons = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#060f1e] overflow-hidden">
+    <footer id="contact" className="relative bg-[#060f1e] overflow-hidden scroll-mt-24">
       {/* Gradient سماوي خفيف من تحت بدل الذهبي */}
       <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/10 via-transparent to-transparent" />
       
