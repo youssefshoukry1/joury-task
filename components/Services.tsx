@@ -5,9 +5,9 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Wrench } from 'lucide-react'
 
 const services = [
-  { title: 'Waschmaschinen', image: '/images/User_attachment1.png', text: 'Die Wäsche wartet? Wir schauen nach, warum Ihre Maschine nicht mehr mitmacht.', tags: ['Abpumpen', 'Schleudern', 'Elektronik'], category: 'Für einen entspannten Alltag', tone: 'dark' },
-  { title: 'Kaffeemaschinen', image: '/images/User_attachment2.png', text: 'Ihr Morgen verdient guten Kaffee. Wir kümmern uns um Druck, Wärme und Durchlauf.', tags: ['Druck', 'Heizung', 'Durchlauf'], category: 'Für Ihren Lieblingsmoment', tone: 'cream' },
-  { title: 'Lautsprecher', image: '/images/pa-speaker.png', text: 'Mehr Musik, weniger Aussetzer. Wir prüfen Klang, Anschlüsse und Stromversorgung.', tags: ['Klang', 'Anschlüsse', 'Verstärker'], category: 'Für den richtigen Sound', tone: 'mint' },
+  { title: 'Waschmaschinen', image: '/images/washer-technician-cutout.png', alt: 'Servicetechniker repariert eine Waschmaschine am geöffneten Wartungsfach', text: 'Die Wäsche wartet? Wir schauen nach, warum Ihre Maschine nicht mehr mitmacht.', tags: ['Abpumpen', 'Schleudern', 'Elektronik'], category: 'Reparatur & Fehlersuche', tone: 'dark' },
+  { title: 'Kaffeemaschinen', image: '/images/image-removebg-preview (3).png', alt: 'Servicetechnikerin repariert eine geöffnete Espressomaschine', text: 'Ihr Morgen verdient guten Kaffee. Wir kümmern uns um Druck, Wärme und Durchlauf.', tags: ['Druck', 'Heizung', 'Durchlauf'], category: 'Reparatur & Wartung', tone: 'cream' },
+  { title: 'Lautsprecher', image: '/images/image-removebg-preview (1).png', alt: 'Audiotechniker repariert die Elektronik eines Lautsprechers', text: 'Mehr Musik, weniger Aussetzer. Wir prüfen Klang, Anschlüsse und Stromversorgung.', tags: ['Klang', 'Anschlüsse', 'Verstärker'], category: 'Reparatur & Klangprüfung', tone: 'mint' },
 ]
 
 export default function Services() {
@@ -19,7 +19,7 @@ export default function Services() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="eyebrow">Unsere Leistungen</p>
-            <h2 className="section-title">Was wir wieder<br /><span className="text-[#258454]">zum Laufen bringen.</span></h2>
+            <h2 className="section-title">Wir reparieren.<br /><span className="text-[#258454]">Sie genießen den Alltag.</span></h2>
           </div>
           <div className="max-w-xs pb-1">
             <p className="text-sm leading-7 text-stone-500">Drei Gerätewelten. Ein Anspruch: genau hinsehen und eine passende Lösung finden.</p>
@@ -45,11 +45,9 @@ export default function Services() {
                   <span className={`text-[11px] ${dark ? 'text-white/35' : 'text-[#64806c]/60'}`}>0{index + 1}</span>
                 </div>
 
-                <div className="relative my-5 flex h-[260px] items-center justify-center lg:h-[285px]">
-                  <span aria-hidden="true" className={`absolute h-52 w-52 rounded-full ${dark ? 'bg-[#28523b]' : 'bg-white/50'}`} />
-                  <span aria-hidden="true" className={`absolute inset-x-10 bottom-3 h-4 rounded-[100%] blur-md ${dark ? 'bg-black/25' : 'bg-[#34513a]/15'}`} />
-                  <Image src={service.image} alt={service.title} width={320} height={320} sizes="(max-width: 768px) 75vw, 28vw" className="relative h-[240px] w-auto max-w-full object-contain drop-shadow-xl transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none lg:h-[260px]" />
-                  <span aria-hidden="true" className={`absolute bottom-3 right-1 flex h-10 w-10 -rotate-12 items-center justify-center rounded-xl border shadow-sm ${dark ? 'border-[#4f715b] bg-[#224b34] text-[#a6e5b7]' : 'border-white bg-white/85 text-[#16804a]'}`}><Wrench size={17} /></span>
+                <div className="relative my-5 h-[270px] overflow-hidden rounded-[20px] lg:h-[285px]">
+                  <Image src={service.image} alt={service.alt} fill sizes="(max-width: 768px) 85vw, 28vw" className="object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.035] motion-reduce:transform-none motion-reduce:transition-none" />
+                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#123a2c]/80 px-3 py-1.5 text-[9px] font-medium text-white backdrop-blur-sm"><Wrench size={12} aria-hidden="true" />Reparaturservice</span>
                 </div>
 
                 <h3 className="text-[26px] font-semibold tracking-tight">{service.title}</h3>
