@@ -1,0 +1,11 @@
+.root {
+  position: relative;
+  overflow: hidden;
+  background: var(--matrix-background, #020604);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

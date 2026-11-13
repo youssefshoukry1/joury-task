@@ -1,25 +1,9 @@
-import type { Metadata } from "next";
-import { Tajawal } from "next/font/google";
-import "./globals.css";
-
-const tajawal = Tajawal({ 
-  subsets: ["arabic"],
-  weight: ["400", "500", "700", "800"]
-});
-
+import type { Metadata } from 'next'
+import './globals.css'
 export const metadata: Metadata = {
-  title: "فريق الصيانة | إصلاح احترافي",
-  description: "صيانة الغسالات، آلات القهوة، والسماعات بضمان وجودة",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="ar" dir="rtl">
-      <body className={`${tajawal.className} antialiased selection:bg-cyan-500 selection:text-white`}>
-        {children}
-      </body>
-    </html>
-  );
+  title: 'FixPro | Reparatur für Ihre Haushaltsgeräte',
+  description: 'Waschmaschinen, Kaffeemaschinen und Lautsprecher: Entdecken Sie den Reparaturservice von FixPro und fragen Sie Ihren Termin an.',
+}
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="de" dir="ltr"><body>{children}</body></html>
 }
