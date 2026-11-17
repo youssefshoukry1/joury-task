@@ -32,3 +32,6 @@ section.bg-\[\#081e29\] .section-description, section.bg-\[\#071823\] .section-d
 .fixpro-marquee:hover .fixpro-marquee-track { animation-play-state: paused !important; }
 @media (prefers-reduced-motion: reduce) { .fixpro-marquee-track { animation: none !important; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-section-reveal], [data-decision-card] { opacity: 1 !important; transform: none !important; }
+}

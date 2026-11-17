@@ -11,6 +11,7 @@ import SectionReveal from '@/components/SectionReveal'
 import { ServiceArea } from '@/components/RepairSections'
 import { RepairRequestProvider } from '@/components/RepairRequestProvider'
 import ServiceInteractions, { ServiceAction } from '@/components/ServiceInteractions'
+import { RepairDecision } from '@/components/ServiceExtras'
 
 export function generateStaticParams() {
   return repairServices.map(service => ({ slug: service.slug }))
@@ -91,6 +92,8 @@ async function ServiceDetails({ params }: { params: Promise<{ slug: string }> })
             </div>
           </section>
         </SectionReveal>
+
+        <RepairDecision device={service.device} />
 
         <SectionReveal>
           <section id="service-fragen" className="section-space"><div className="site-container grid gap-10 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow">Gut zu wissen</p><h2 className="section-title">Ihre Fragen.<br />Unsere Antworten.</h2><p className="mt-5 max-w-xs text-sm leading-7 text-stone-500">Noch etwas unklar? Wir besprechen Ihr Gerät gerne persönlich mit Ihnen.</p></div><div className="space-y-3">{questions.map(([question, answer], index) => <details key={question} className="group rounded-2xl border border-[#e1e9e3] bg-white p-5 open:bg-[#f1f7f1]" open={index === 0}><summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">{question}<ChevronDown size={17} className="shrink-0 text-[#698a73] transition-transform group-open:rotate-180" /></summary><p className="mt-4 text-sm leading-7 text-stone-500">{answer}</p></details>)}</div></div></section>

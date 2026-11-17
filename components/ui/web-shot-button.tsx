@@ -365,7 +365,7 @@ export const WebShotButton = React.forwardRef<HTMLButtonElement, WebShotButtonPr
 
   return (
     <span ref={wrapRef} className="relative isolate inline-flex text-[#258454]">
-      {!reduced && <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute -z-10" />}
+      <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute -z-10 motion-reduce:hidden" />
       <motion.button
         ref={setRefs}
         type="button"
