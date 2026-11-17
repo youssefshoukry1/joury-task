@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll } from 'framer-motion'
 import { ArrowDown, ArrowUpRight, Check, ChevronRight, CircleDollarSign, Layers3, PackageCheck, ScanLine, Wrench } from 'lucide-react'
 import SectionReveal from '@/components/SectionReveal'
+import GlassFolder from '@/components/ui/glass-folder-cards'
 
 const inspections = {
   Waschmaschine: {
@@ -82,6 +83,46 @@ const decisions = [
   { icon: CircleDollarSign, title: 'Der Aufwand.', caption: 'Eine klare Grundlage', text: 'Arbeitsaufwand und mögliche Ersatzteile gehören zusammen. Wir besprechen die Optionen, bevor Sie sich für weitere Arbeiten entscheiden.' },
 ]
 
+const folderDetails = [
+  [
+    { name: 'Gesamtzustand', text: 'Wir betrachten Verschleiß, Pflege und den allgemeinen Zustand Ihres Geräts.' },
+    { name: 'Nutzung', text: 'Wie häufig wird das Gerät genutzt? Ihre Beobachtungen helfen, den Defekt einzuordnen.' },
+    { name: 'Fehlerbild', text: 'Ein einzelner Defekt sagt nicht alles über das Gerät aus. Wir suchen nach der konkreten Ursache.' },
+  ],
+  [
+    { name: 'Verfügbarkeit', text: 'Wir klären, ob passende Ersatzteile für Ihr Modell erhältlich sind.' },
+    { name: 'Instandsetzung', text: 'Je nach Bauteil und Fehler kann auch eine Instandsetzung infrage kommen.' },
+    { name: 'Möglichkeiten', text: 'Nach der Diagnose besprechen wir mit Ihnen, welche Reparaturmöglichkeiten bestehen.' },
+  ],
+  [
+    { name: 'Arbeitszeit', text: 'Diagnose und Reparaturaufwand hängen vom Fehlerbild und der Zugänglichkeit der Bauteile ab.' },
+    { name: 'Ersatzteile', text: 'Benötigte Teile fließen in die Einschätzung des gesamten Reparaturaufwands ein.' },
+    { name: 'Abstimmung', text: 'Sie entscheiden auf einer klaren Grundlage. Weitere Arbeiten stimmen wir vorher mit Ihnen ab.' },
+  ],
+]
+
+function DecisionFolder({ index }: { index: number }) {
+  const [selected, setSelected] = useState<number | null>(null)
+  const reduced = useReducedMotion()
+  const item = decisions[index]
+  const details = folderDetails[index]
+  const palettes = [['#102c22', '#3e7754', '#b1ddb9'], ['#70725a', '#c7c4a4', '#f6ead1'], ['#205b48', '#87bfa3', '#e1f1df']]
+  return <div className="flex min-w-0 flex-col items-center">
+    <GlassFolder label={item.title.replace('.', '')} meta="3 Perspektiven" action="none" width={280} appearDelay={index * 160}
+      art={{ style: 'streak', colors: palettes[index], gloss: .25, warp: 1.6, scale: .7 }} seed={index + 7}
+      files={details.map(file => ({ name: file.name, meta: 'FixPro' }))}
+      onOpenChange={open => { if (!open) setSelected(null) }} onFileSelect={(_, file) => setSelected(file)}
+      className="repair-folder" />
+    <div className="relative z-10 mt-3 w-full rounded-[22px] border border-white/80 bg-white/55 p-5 text-left md:p-6" aria-live="polite" aria-atomic="true">
+      <p className="text-[9px] font-semibold uppercase tracking-widest text-[#818c77]">0{index + 1} / {item.caption}</p>
+      <AnimatePresence mode="wait" initial={false}><motion.div key={selected ?? 'intro'} initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: .18 }} className="min-h-[130px]">
+        <h3 className="mt-3 text-lg font-semibold text-[#263f2c]">{selected === null ? item.title : details[selected].name}</h3>
+        <p className="mt-3 text-sm leading-7 text-[#7b796c]">{selected === null ? item.text : details[selected].text}</p>
+      </motion.div></AnimatePresence>
+    </div>
+  </div>
+}
+
 export function RepairDecision({ device }: { device: string }) {
   const root = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
@@ -90,8 +131,9 @@ export function RepairDecision({ device }: { device: string }) {
     <div className="mx-auto max-w-[1280px] overflow-hidden rounded-[36px] border border-[#e7dfd2] bg-[#f1eadf]">
       <SectionReveal><div className="p-7 text-center md:px-12 md:pb-10 md:pt-14"><p className="eyebrow">Reparieren oder ersetzen?</p><h2 className="section-title">Eine zweite Chance.<br /><span className="text-[#258454]">Wenn sie sinnvoll ist.</span></h2><p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-[#7b796c]">Bei Ihrem Gerät zählt das Zusammenspiel dieser drei Fragen. Die Diagnose schafft die Grundlage für Ihre Entscheidung.</p><ArrowDown size={20} className="mx-auto mt-6 text-[#258454]" /></div></SectionReveal>
       <div className="relative px-6 pb-8 md:px-12 md:pb-12">
-        <div aria-hidden="true" className="absolute left-12 right-12 top-7 hidden h-px bg-[#d8ccba] md:block"><motion.div className="h-full origin-left bg-[#258454]" style={{ scaleX: reduced ? 1 : scrollYProgress }} /></div>
-        <div className="grid gap-5 md:grid-cols-3" style={{ perspective: 1000 }}>{decisions.map(({ icon: Icon, title, caption, text }, index) => <motion.article key={title} data-decision-card initial={{ opacity: 0, y: 65, rotateX: 12 }} whileInView={{ opacity: 1, y: 0, rotateX: 0 }} viewport={{ once: false, amount: .25, margin: '0px 0px -60px 0px' }} transition={{ duration: reduced ? 0 : .8, delay: reduced ? 0 : index * .12, ease: [.22, 1, .36, 1] }} whileHover={reduced ? undefined : { y: -7, transition: { duration: .25, delay: 0 } }} className="relative rounded-[26px] border border-white/90 bg-[#fffcf7] p-6 md:p-7"><span className="relative mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e7eee3] text-[#258454]"><Icon size={25} strokeWidth={1.4} /></span><p className="text-[9px] font-semibold uppercase tracking-widest text-[#8c927f]">0{index + 1} / {caption}</p><h3 className="mt-3 text-2xl font-semibold tracking-tight text-[#263f2c]">{title}</h3><p className="mt-4 text-sm leading-7 text-[#7b796c]">{text}</p></motion.article>)}</div>
+        <div aria-hidden="true" className="absolute left-12 right-12 top-0 hidden h-px bg-[#d8ccba] md:block"><motion.div className="h-full origin-left bg-[#258454]" style={{ scaleX: reduced ? 1 : scrollYProgress }} /></div>
+        <p className="mb-3 text-center text-[10px] tracking-wide text-[#7b796c]">Ordner öffnen und eine Karte auswählen.</p>
+        <div className="grid gap-x-7 gap-y-8 md:grid-cols-3">{decisions.map((item, index) => <DecisionFolder key={item.title} index={index} />)}</div>
       </div>
       <SectionReveal><div className="flex flex-wrap items-center justify-between gap-6 bg-[#173c2d] p-7 text-white md:px-12 md:py-9"><div className="flex items-start gap-4"><Wrench size={24} className="mt-1 shrink-0 text-[#9de5b4]" /><div><p className="text-lg font-semibold">Erst verstehen. Dann entscheiden.</p><p className="mt-2 text-xs leading-6 text-[#b0c8b8]">{device}: Lassen Sie uns gemeinsam auf das Fehlerbild schauen.</p></div></div><a href="#anfrage" className="gentle-button inline-flex items-center gap-4 rounded-full bg-[#a3e5b5] px-6 py-4 text-xs font-semibold text-[#173c2d]">Gerät prüfen lassen<ArrowUpRight size={17} /></a></div></SectionReveal>
     </div>
