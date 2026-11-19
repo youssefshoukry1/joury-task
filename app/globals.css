@@ -8,6 +8,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .section-title { margin-top: 1rem; font-size: clamp(2rem, 3.5vw, 3.25rem); font-weight: 600; letter-spacing: -.045em; line-height: 1.12; text-wrap: balance; }
 .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; border-radius: 999px; background: #16894e; padding: 1rem 1.5rem; color: white; font-size: .875rem; font-weight: 600; transition: background .2s, box-shadow .2s, translate .22s; }
 .primary-button:hover { background: #13834a; }
+.service-page button:not(:disabled), .service-page a[href] { cursor: pointer; }
+.service-action { transition: background-color .22s ease; }
+.service-page .service-action:is(:hover, :focus-visible) { background-color: #116c3c !important; }
+.service-page .primary-button:is(:hover, :focus-visible) { background-color: #116c3c; }
+.service-cta:is(:hover, :focus-visible) { background-color: #236b43; color: white; }
+.service-page #bauteile button { transition: background-color .22s, border-color .22s; }
+.service-page #bauteile button:is(:hover, :focus-visible) { background-color: #dcebe1; border-color: #88b598; }
 .site-container { width: 100%; max-width: 1224px; margin-inline: auto; padding-inline: 1.5rem; }
 .section-space { padding-block: 5rem; }
 .section-heading { max-width: 660px; margin-inline: auto; text-align: center; }

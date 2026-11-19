@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { MessageCircle, Search, Wrench, ArrowUpRight } from 'lucide-react'
+import { useId, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { MessageCircle, Search, Wrench, ChevronDown } from 'lucide-react'
 
 const steps = [
   { icon: MessageCircle, title: 'Ihre Anfrage', description: 'Gerät und Fehler kennenlernen.', detail: 'Sie nennen uns Marke, Modell und Ihre Beobachtungen. Gemeinsam klären wir den nächsten Schritt.', label: 'Schritt 01' },
@@ -10,18 +11,25 @@ const steps = [
 ]
 
 export default function DisplayCards() {
-  const [active, setActive] = useState(2)
+  const [active, setActive] = useState<number | null>(0)
+  const id = useId()
+  const reduced = useReducedMotion()
   return (
-    <div>
-      <div className="relative mx-auto h-[310px] w-full max-w-[470px]">
-        {steps.map(({ icon: Icon, title, description, label }, index) => (
-          <button key={title} type="button" onClick={() => setActive(index)} onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} aria-pressed={active === index} aria-controls="repair-step-description" className={`absolute flex h-[150px] w-[80%] -skew-y-[7deg] flex-col justify-between rounded-[20px] border p-5 text-left shadow-[0_14px_30px_-24px_rgba(15,65,35,.5)] transition-[transform,background-color,border-color] duration-500 motion-reduce:transform-none motion-reduce:transition-none ${active === index ? '-translate-y-5 border-[#7ebd91] bg-[#163e2b] text-white' : 'border-[#d1e1d5] bg-[#f0f6f0] text-[#41644c]'}`} style={{ left: `${index * 8}%`, top: `${index * 65 + 30}px`, zIndex: active === index ? 5 : index }}>
-            <span className="flex items-center gap-3"><span className={`flex h-8 w-8 items-center justify-center rounded-full ${active === index ? 'bg-white/10 text-[#a4e6b5]' : 'bg-[#dfede2] text-[#338457]'}`}><Icon size={17} /></span><span className="text-lg font-semibold">{title}</span><ArrowUpRight size={15} className="ml-auto opacity-50" /></span>
-            <span className="text-sm">{description}</span><span className={`text-[10px] ${active === index ? 'text-[#a4cbb0]' : 'text-[#8ca291]'}`}>{label}</span>
-          </button>
-        ))}
-      </div>
-      <p id="repair-step-description" aria-live="polite" className="mx-auto mt-5 max-w-sm text-center text-sm leading-7 text-[#6a8070]">{steps[active].detail}</p>
-    </div>
+    <ol className="space-y-4" aria-label="Ihr Reparaturablauf">
+      {steps.map(({ icon: Icon, title, description, detail, label }, index) => {
+        const open = active === index
+        return <li key={title} className={`overflow-hidden rounded-[24px] border transition-colors duration-300 ${open ? 'border-[#276546] bg-[#163e2b] text-white' : 'border-[#dce8df] bg-[#f4f8f3] text-[#2d4835]'}`}>
+          <h3><button id={`${id}-step-${index}`} type="button" onClick={() => setActive(open ? null : index)} aria-expanded={open} aria-controls={`${id}-panel-${index}`} className="group flex w-full cursor-pointer items-start gap-4 p-5 text-left sm:p-6">
+            <span aria-hidden="true" className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${open ? 'bg-[#a3e5b5] text-[#163e2b]' : 'bg-[#e1eee3] text-[#258454]'}`}><Icon size={21} strokeWidth={1.6} /></span>
+            <span className="min-w-0 flex-1"><span className={`mb-1 block text-[9px] font-semibold uppercase tracking-[.15em] ${open ? 'text-[#a3d9b4]' : 'text-[#718e79]'}`}>{label}</span><span className="block text-lg font-semibold">{title}</span><span className={`mt-2 block text-xs font-normal leading-6 ${open ? 'text-[#b9d1c1]' : 'text-[#6a8070]'}`}>{description}</span>
+              <span className={`mt-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold transition-colors ${open ? 'border-white/20 text-[#b8ecc6] group-hover:bg-white/10' : 'border-[#bfd8c5] text-[#21673e] group-hover:bg-[#dceee0]'}`}>{open ? 'Details schließen' : 'Details anzeigen'}<ChevronDown size={13} className={`transition-transform duration-300 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} /></span>
+            </span>
+          </button></h3>
+          <div id={`${id}-panel-${index}`} role="region" aria-labelledby={`${id}-step-${index}`}>
+            <AnimatePresence initial={false}>{open && <motion.div key="detail" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduced ? 0 : .3, ease: [.22, 1, .36, 1] }} className="overflow-hidden"><p className="mx-5 border-t border-white/15 py-5 text-sm leading-7 text-[#c5decd] sm:mx-6">{detail}</p></motion.div>}</AnimatePresence>
+          </div>
+        </li>
+      })}
+    </ol>
   )
 }

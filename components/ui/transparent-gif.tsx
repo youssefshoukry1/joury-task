@@ -39,11 +39,13 @@ function clearBackdrop(context: CanvasRenderingContext2D, width: number, height:
   context.putImageData(frame, 0, 0)
 }
 
-export default function TransparentGif({ src, alt, finalSrc, posterSrc, aspectRatio = '347 / 267' }: {
+export default function TransparentGif({ src, alt, finalSrc, posterSrc, frames, frameDuration = 170, aspectRatio = '347 / 267' }: {
   src: string
   alt: string
   finalSrc: string
   posterSrc: string
+  frames?: string[]
+  frameDuration?: number
   aspectRatio?: string
 }) {
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -53,7 +55,7 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, aspectRa
   const pausedRef = useRef(false)
   useEffect(() => {
     const Decoder = (window as unknown as { ImageDecoder?: new (options: { data: ArrayBuffer; type: string }) => GifDecoder }).ImageDecoder
-    if (!Decoder) { setFallback(true); return }
+    if (!Decoder && !frames?.length) { setFallback(true); return }
     let stopped = false
     let visible = false
     let started = false
@@ -64,6 +66,45 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, aspectRa
     const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting }, { threshold: .35 })
     if (canvas.current) observer.observe(canvas.current)
     async function run() {
+      if (frames?.length) {
+        const loadFrame = async (url: string) => {
+          const image = new Image()
+          image.src = url
+          await image.decode()
+          return image
+        }
+        const pending = frames.map(url => loadFrame(url).catch(() => null))
+        const first = await pending[0]
+        if (!first) throw new Error('HD poster unavailable')
+        const element = canvas.current
+        const context = element?.getContext('2d')
+        if (stopped || !element || !context) return
+        element.width = 1430
+        const [aspectWidth, aspectHeight] = aspectRatio.split('/').map(Number)
+        element.height = Math.round(1430 * aspectHeight / aspectWidth)
+        context.imageSmoothingQuality = 'high'
+        const paint = (image: HTMLImageElement, index: number) => {
+          context.clearRect(0, 0, element.width, element.height)
+          context.drawImage(image, 0, 0, element.width, element.height)
+          element.dataset.frame = String(index)
+        }
+        paint(first, 0)
+        const images = await Promise.all(pending)
+        if (images.some(image => image === null)) throw new Error('HD sequence unavailable')
+        if (stopped || reduced) return
+        let index = 1
+        const advance = () => {
+          if (stopped) return
+          if (document.hidden || !visible || pausedRef.current) { timer = setTimeout(advance, 100); return }
+          if (!started) { started = true; timer = setTimeout(advance, 1000); return }
+          paint(images[index]!, index)
+          index += 1
+          if (index === images.length) { setFinished(true); return }
+          timer = setTimeout(advance, frameDuration)
+        }
+        advance()
+        return
+      }
       // Prepare the restored final frame before playback ends; leave the GIF's
       // last frame visible if the larger asset cannot be loaded.
       const sharpFrame = new Image()
@@ -113,7 +154,7 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, aspectRa
     function fail() { if (!stopped) setFallback(true) }
     void run().catch(fail)
     return () => { stopped = true; observer.disconnect(); controller.abort(); clearTimeout(timer); decoder?.close() }
-  }, [src, finalSrc])
+  }, [src, finalSrc, frames, frameDuration, aspectRatio])
 
   return <div className="relative">
     {fallback ? <img src={posterSrc} alt={alt} style={{ aspectRatio }} className="w-full object-contain" /> : <canvas ref={canvas} role="img" aria-label={alt} data-finished={finished} style={{ aspectRatio }} className="w-full object-contain" />}

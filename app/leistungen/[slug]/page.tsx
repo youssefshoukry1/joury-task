@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-[#faf9f6]">
+      <main className="service-page min-h-screen bg-[#faf9f6]">
         <Navbar />
         <section role="status" aria-label="Service wird geladen" className="bg-[#071e26] px-6 pb-16 pt-36 text-white md:px-12">
           <div className="mx-auto max-w-[1200px] rounded-[32px] border border-white/10 bg-[#103329] p-8 md:p-14">
@@ -55,7 +55,7 @@ async function ServiceDetails({ params }: { params: Promise<{ slug: string }> })
 
   return (
     <RepairRequestProvider key={service.slug} initialDevice={service.device}>
-      <main className="min-h-screen bg-[#faf9f6]">
+      <main className="service-page min-h-screen bg-[#faf9f6]">
         <Navbar />
         <section className="overflow-hidden bg-[#071e26] px-4 pb-8 pt-28 text-white md:px-8 md:pt-32">
           <div className="mx-auto max-w-[1280px]">
