@@ -1,5 +1,6 @@
 'use client'
 
+import LiquidHeading from '@/components/ui/liquid-heading'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Search, MessagesSquare, Leaf, ShieldCheck, ArrowUpRight } from 'lucide-react'
 const items = [
@@ -23,7 +24,7 @@ export default function Stats() {
         <div className="relative grid items-end gap-6 md:grid-cols-[1.2fr_1fr] md:gap-16">
           <div>
             <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-[#427955]"><ShieldCheck size={15} />Das FixPro Prinzip</p>
-            <h2 className="mt-5 text-[clamp(2rem,3.8vw,3.4rem)] font-semibold leading-[1.08] tracking-[-.05em]">Ein gutes Gefühl.<br /><span className="text-[#228353]">Vom ersten Schritt an.</span></h2>
+            <LiquidHeading />
           </div>
           <div className="max-w-sm">
             <p className="text-sm leading-7 text-[#5f7465]">Ihr Gerät verdient Aufmerksamkeit. Sie verdienen klare Antworten. Wir bringen beides zusammen.</p>
@@ -34,14 +35,14 @@ export default function Stats() {
           {items.map(({ icon: Icon, title, text }, index) => (
             <motion.article
               key={title}
-              initial={reduced ? false : { opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={reduced ? false : { opacity: 0, y: 55, rotate: index === 0 ? -3 : index === 2 ? 3 : 0, scale: .94 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
               viewport={{ once: false, amount: 0.2, margin: '0px 0px -70px 0px' }}
-              transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : index * 0.12 }}
+              transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 110, damping: 17, delay: index * .16 }}
               whileHover={reduced ? undefined : { y: -5 }}
               className="rounded-[24px] border border-white/80 bg-white/85 p-6 shadow-[0_8px_25px_-20px_rgba(20,65,40,0.3)] md:p-7"
             >
-              <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#edf5ee]"><Icon size={23} strokeWidth={1.6} className="text-[#248454]" /></span>
+              <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#edf5ee]"><motion.span className="inline-flex" animate={reduced ? { rotate: 0 } : { rotate: [0, 20, -20, 12, -12, 0] }} transition={{ duration: 1, delay: 5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}><Icon size={23} strokeWidth={1.6} className="text-[#248454]" /></motion.span></span>
               <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
               <p className="mt-3 max-w-xs text-sm leading-7 text-[#718176]">{text}</p>
             </motion.article>
