@@ -8,11 +8,21 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .section-title { margin-top: 1rem; font-size: clamp(2rem, 3.5vw, 3.25rem); font-weight: 600; letter-spacing: -.045em; line-height: 1.12; text-wrap: balance; }
 .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; border-radius: 999px; background: #16894e; padding: 1rem 1.5rem; color: white; font-size: .875rem; font-weight: 600; transition: background .2s, box-shadow .2s, translate .22s; }
 .primary-button:hover { background: #13834a; }
+main:not(.service-page) .primary-button:is(:hover, :focus-visible),
+footer .primary-button:is(:hover, :focus-visible),
+main:not(.service-page) nav a.gentle-button:is(:hover, :focus-visible) {
+  background: #a3e5b5;
+  color: #071e26;
+}
 .service-page button:not(:disabled), .service-page a[href] { cursor: pointer; }
-.service-action { transition: background-color .22s ease; }
-.service-page .service-action:is(:hover, :focus-visible) { background-color: #116c3c !important; }
-.service-page .primary-button:is(:hover, :focus-visible) { background-color: #116c3c; }
-.service-cta:is(:hover, :focus-visible) { background-color: #236b43; color: white; }
+.service-action { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; border: 1px solid #e2e2df; border-radius: 14px; background-color: #fafaf8 !important; padding: 1rem 1.75rem; color: #282c2e !important; font-size: .875rem; font-weight: 600; box-shadow: none; transition: background-color .22s ease, color .22s ease, border-color .22s ease; }
+.service-page .service-action:is(:hover, :focus-visible) { background-color: #cbd1d3 !important; border-color: #cbd1d3; color: #20272a !important; }
+.service-action > span[aria-hidden] { display: none; }
+.service-action > span { text-shadow: none; }
+.service-page .primary-button, .service-page .service-cta { background-color: #216344; color: white; border: 1px solid #458663; box-shadow: none; }
+.service-page .primary-button:is(:hover, :focus-visible), .service-page .service-cta:is(:hover, :focus-visible) { background-color: #a3e5b5; border-color: #a3e5b5; color: #071e26; }
+.service-page :is(.service-action, .primary-button, .service-cta) .lucide-arrow-right { transition: rotate .22s ease; }
+.service-page :is(.service-action, .primary-button, .service-cta):is(:hover, :focus-visible) .lucide-arrow-right { rotate: -45deg; }
 .service-page #bauteile button { transition: background-color .22s, border-color .22s; }
 .service-page #bauteile button:is(:hover, :focus-visible) { background-color: #dcebe1; border-color: #88b598; }
 .site-container { width: 100%; max-width: 1224px; margin-inline: auto; padding-inline: 1.5rem; }
@@ -26,6 +36,14 @@ section.bg-\[\#081e29\] .section-description, section.bg-\[\#071823\] .section-d
 .gentle-card { transition: translate .28s cubic-bezier(.22,1,.36,1), box-shadow .28s, border-color .28s; }
 .gentle-button { transition: translate .22s, background-color .22s, border-color .22s; }
 .primary-button > svg, .gentle-button > svg, .gentle-card a > svg { transition: translate .22s; }
+main:not(.service-page) :is(a, button) :is(.lucide-arrow-right, .lucide-arrow-up-right),
+footer :is(a, button) :is(.lucide-arrow-right, .lucide-arrow-up-right) { transition: rotate .25s ease, translate .25s ease; }
+@media (hover: hover) and (pointer: fine) {
+  main:not(.service-page) :is(a, button):is(:hover, :focus-visible) .lucide-arrow-right,
+  footer :is(a, button):is(:hover, :focus-visible) .lucide-arrow-right { rotate: -45deg; translate: 2px -2px; }
+  main:not(.service-page) :is(a, button):is(:hover, :focus-visible) .lucide-arrow-up-right,
+  footer :is(a, button):is(:hover, :focus-visible) .lucide-arrow-up-right { translate: 2px -3px; }
+}
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .gentle-card:hover { translate: 0 -4px; box-shadow: 0 14px 30px -22px rgb(24 65 40 / .28); }
   .primary-button:hover, .gentle-button:hover { translate: 0 -2px; }

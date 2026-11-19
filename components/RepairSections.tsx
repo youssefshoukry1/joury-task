@@ -1,8 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useRepairRequest, type RepairDevice } from '@/components/RepairRequestProvider'
-import { useState, type FormEvent } from 'react'
+import { useState } from 'react'
 import {
   ArrowRight, ArrowUpRight, Check, CheckCheck,
   ChevronDown, Headphones, Leaf, MapPin, MessageCircle,
@@ -76,17 +75,7 @@ const questions = [
 ]
 
 export function FAQ() {
-  return <section id="faq" className="section-space bg-[#faf9f6]"><div className="site-container grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-20"><div><p className="eyebrow">Gut zu wissen</p><h2 className="section-title">Noch Fragen?<br />Ganz verständlich.</h2><p className="mt-6 max-w-sm text-sm leading-7 text-stone-600">Hier finden Sie Antworten auf die wichtigsten Fragen vor Ihrer ersten Anfrage.</p><a href="#contact" className="mt-7 inline-flex items-center gap-3 text-sm font-semibold text-[#16804a]">Persönlich nachfragen<ArrowUpRight size={17} /></a></div><div className="space-y-3">{questions.map(([question, answer], index) => <details key={question} className="group rounded-2xl border border-[#e1e9e3] bg-white p-5 open:border-[#b9d8c3] open:bg-[#f4f9f5]" open={index === 0 ? true : undefined}><summary className="flex cursor-pointer list-none items-start gap-4 text-sm font-semibold leading-6 [&::-webkit-details-marker]:hidden"><span className="mt-0.5 font-mono text-[10px] text-[#16804a]">0{index + 1}</span><span className="flex-1">{question}</span><ChevronDown size={17} className="mt-1 shrink-0 text-stone-400 transition-transform group-open:rotate-180 motion-reduce:transition-none" /></summary><p className="mt-4 pl-8 text-sm leading-7 text-stone-600">{answer}</p></details>)}</div></div></section>
+  return <section id="faq" className="section-space bg-[#faf9f6]"><div className="site-container grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-20"><div><p className="eyebrow">Gut zu wissen</p><h2 className="section-title">Noch Fragen?<br />Ganz verständlich.</h2><p className="mt-6 max-w-sm text-sm leading-7 text-stone-600">Hier finden Sie Antworten auf die wichtigsten Fragen vor Ihrer ersten Anfrage.</p><a href="#contact" className="mt-7 inline-flex items-center gap-3 text-sm font-semibold text-[#16804a]">Persönlich nachfragen<ArrowUpRight size={17} /></a></div><div className="space-y-3">{questions.map(([question, answer], index) => <details key={question} name="homepage-faq" className="group rounded-2xl border border-[#e1e9e3] bg-white p-5 open:border-[#b9d8c3] open:bg-[#f4f9f5]" open={index === 0 ? true : undefined}><summary className="flex cursor-pointer list-none items-start gap-4 text-sm font-semibold leading-6 [&::-webkit-details-marker]:hidden"><span className="mt-0.5 font-mono text-[10px] text-[#16804a]">0{index + 1}</span><span className="flex-1">{question}</span><ChevronDown size={17} className="mt-1 shrink-0 text-stone-400 transition-transform group-open:rotate-180 motion-reduce:transition-none" /></summary><p className="mt-4 pl-8 text-sm leading-7 text-stone-600">{answer}</p></details>)}</div></div></section>
 }
 
-export function ServiceArea() {
-  const [area, setArea] = useState('')
-  const { device, setDevice } = useRepairRequest()
-  function prepare(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const subject = `Reparaturanfrage: ${device}`
-    const body = `Guten Tag FixPro,\n\nich möchte eine Reparatur anfragen.\n\nGerät: ${device}\nOrt / PLZ: ${area.trim()}\nMarke / Modell: \nFehlerbeschreibung: \n\nBitte teilen Sie mir mit, ob ein Termin bei mir möglich ist.\n\nVielen Dank!`
-    window.location.href = `mailto:contact@fixpro.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-  }
-  return <section id="anfrage" className="section-space bg-[#e8f1eb]"><div className="site-container grid items-center gap-10 lg:grid-cols-2 lg:gap-20"><div><p className="eyebrow">In Ihrer Nähe?</p><h2 className="section-title">Der erste Schritt<br />beginnt bei Ihnen.</h2><p className="mt-6 max-w-md text-sm leading-7 text-stone-600">Sagen Sie uns, wo sich Ihr Gerät befindet. Gemeinsam klären wir das Einsatzgebiet, den passenden Termin und die nächsten Schritte.</p><div className="mt-7 flex gap-4"><MapPin size={24} className="mt-1 shrink-0 text-[#16804a]"/><div><h3 className="text-sm font-semibold">Ort und Gerät angeben</h3><p className="mt-1 max-w-sm text-xs leading-6 text-stone-500">Ihre Angaben werden in eine E-Mail-Vorlage übernommen. Den Versand bestätigen Sie in Ihrem E-Mail-Programm.</p></div></div></div><form onSubmit={prepare} className="rounded-2xl border border-[#d8e6dc] bg-white p-7 md:p-9"><h3 className="text-xl font-semibold">Wie können wir helfen?</h3><label htmlFor="repair-device" className="mb-2 mt-6 block text-xs font-semibold text-stone-600">Welches Gerät?</label><select id="repair-device" value={device} onChange={event => setDevice(event.target.value as RepairDevice)} className="w-full rounded-lg border border-stone-200 bg-[#fafcfb] px-4 py-3 text-sm">{['Waschmaschine','Kaffeemaschine','Lautsprecher','Anderes Gerät'].map(option => <option key={option}>{option}</option>)}</select><label htmlFor="repair-area" className="mb-2 mt-5 block text-xs font-semibold text-stone-600">Ihr Ort oder Ihre Postleitzahl</label><input id="repair-area" value={area} onChange={event => setArea(event.target.value)} required maxLength={100} autoComplete="postal-code" placeholder="z. B. Ort oder PLZ" className="w-full rounded-lg border border-stone-200 bg-[#fafcfb] px-4 py-3 text-sm" /><button type="submit" className="primary-button mt-6 w-full">E-Mail-Anfrage vorbereiten<ArrowRight size={17} /></button><p className="mt-4 text-center text-[10px] leading-5 text-stone-400">Noch keine Buchung. Kein automatischer Versand.</p></form></div></section>
-}
+export { default as ServiceArea } from "@/components/ui/contact-with-globe"

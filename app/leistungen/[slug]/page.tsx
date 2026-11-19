@@ -1,3 +1,4 @@
+import FallingText from '@/components/ui/falling-text'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Image from 'next/image'
@@ -78,7 +79,7 @@ async function ServiceDetails({ params }: { params: Promise<{ slug: string }> })
         <SectionReveal>
           <section className="section-space bg-[#faf9f6]">
             <div className="site-container grid items-start gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-              <div><p className="eyebrow">Typische Fehlerbilder</p><h2 className="section-title">Kommt Ihnen<br />das bekannt vor?</h2><p className="mt-6 max-w-sm text-sm leading-7 text-stone-500">Ein Defekt kann verschiedene Ursachen haben. Wir grenzen das Problem ein, bevor über die nächsten Schritte entschieden wird.</p><a href="#anfrage" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#258454]">Mein Fehler ist anders<ArrowUpRight size={16} /></a></div>
+              <div><p className="eyebrow">Typische Fehlerbilder</p><h2 className="section-title"><FallingText text="Kommt Ihnen" /><FallingText text="das bekannt vor?" /></h2><p className="mt-6 max-w-sm text-sm leading-7 text-stone-500">Ein Defekt kann verschiedene Ursachen haben. Wir grenzen das Problem ein, bevor über die nächsten Schritte entschieden wird.</p><a href="#anfrage" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#258454]">Mein Fehler ist anders<ArrowUpRight size={16} /></a></div>
               <div className="grid gap-3 sm:grid-cols-2">{service.problems.map((problem, index) => <article key={problem} className="gentle-card rounded-[22px] border border-[#dce8df] bg-white p-6"><span className="mb-5 flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf5ee] text-xs font-semibold text-[#258454]">0{index + 1}</span><h3 className="text-base font-semibold leading-7 text-[#2d4835]">{problem}</h3><p className="mt-3 flex items-center gap-2 text-[11px] text-stone-500"><Search size={13} />Ursache gezielt prüfen</p></article>)}</div>
             </div>
           </section>
@@ -96,7 +97,7 @@ async function ServiceDetails({ params }: { params: Promise<{ slug: string }> })
         <RepairDecision device={service.device} />
 
         <SectionReveal>
-          <section id="service-fragen" className="section-space"><div className="site-container grid gap-10 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow">Gut zu wissen</p><h2 className="section-title">Ihre Fragen.<br />Unsere Antworten.</h2><p className="mt-5 max-w-xs text-sm leading-7 text-stone-500">Noch etwas unklar? Wir besprechen Ihr Gerät gerne persönlich mit Ihnen.</p></div><div className="space-y-3">{questions.map(([question, answer], index) => <details key={question} className="group rounded-2xl border border-[#e1e9e3] bg-white p-5 open:bg-[#f1f7f1]" open={index === 0}><summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">{question}<ChevronDown size={17} className="shrink-0 text-[#698a73] transition-transform group-open:rotate-180" /></summary><p className="mt-4 text-sm leading-7 text-stone-500">{answer}</p></details>)}</div></div></section>
+          <section id="service-fragen" className="section-space"><div className="site-container grid gap-10 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow">Gut zu wissen</p><h2 className="section-title">Ihre Fragen.<br />Unsere Antworten.</h2><p className="mt-5 max-w-xs text-sm leading-7 text-stone-500">Noch etwas unklar? Wir besprechen Ihr Gerät gerne persönlich mit Ihnen.</p></div><div className="space-y-3">{questions.map(([question, answer], index) => <details key={question} name="service-faq" className="group rounded-2xl border border-[#e1e9e3] bg-white p-5 open:bg-[#f1f7f1]" open={index === 0}><summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">{question}<ChevronDown size={17} className="shrink-0 text-[#698a73] transition-transform group-open:rotate-180" /></summary><p className="mt-4 text-sm leading-7 text-stone-500">{answer}</p></details>)}</div></div></section>
         </SectionReveal>
 
         <SectionReveal><ServiceArea /></SectionReveal>

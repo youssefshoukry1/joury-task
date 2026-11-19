@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import ParticleImage from '@/components/ui/particle-image'
 import { ArrowUpRight, HeartHandshake, Leaf, Wrench, MessagesSquare, Search, ClipboardCheck } from 'lucide-react'
 import LogoCloudMarquee from '@/components/ui/logo-cloud-marquee'
 
@@ -24,7 +24,7 @@ export default function About() {
       >
         <div className="mt-10 grid overflow-hidden rounded-[28px] border border-[#dce8df] bg-white md:mt-12 md:grid-cols-[1.05fr_1fr] md:rounded-[36px]">
           <div className="relative min-h-[280px] md:min-h-[350px]">
-            <Image src="/images/repair-team-hero.png" alt="FixPro Techniker bei der Reparatur von Haushaltsgeräten" fill sizes="(max-width: 768px) 90vw, 45vw" className="object-cover object-[85%_center]" />
+            <ParticleImage src="/images/repair-team-hero.png" alt="FixPro Techniker bei der Reparatur von Haushaltsgeräten" />
             <span className="absolute bottom-5 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-[10px] font-medium text-[#31563d]"><span className="h-1.5 w-1.5 rounded-full bg-[#2c9a58]" />Mit Sorgfalt bei der Sache.</span>
           </div>
           <div className="flex flex-col justify-center p-7 md:p-10 lg:p-12">

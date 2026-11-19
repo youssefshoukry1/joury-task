@@ -8,7 +8,7 @@ import { WebShotButton } from '@/components/ui/web-shot-button'
 import { ArrowRight } from 'lucide-react'
 
 export function ServiceAction() {
-  return <WebShotButton className="service-action" color="#16894e" reach={90} threads={4} onClick={() => document.getElementById('anfrage')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>Reparatur anfragen<ArrowRight size={17} /></WebShotButton>
+  return <WebShotButton className="service-action gentle-button" color="#fafaf8" reach={90} threads={4} onClick={() => document.getElementById('anfrage')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>Reparatur anfragen<ArrowRight size={17} /></WebShotButton>
 }
 
 export default function ServiceInteractions({ device }: { device: string }) {

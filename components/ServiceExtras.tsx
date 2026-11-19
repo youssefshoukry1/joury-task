@@ -1,5 +1,8 @@
 'use client'
 
+import FallingText from '@/components/ui/falling-text'
+
+
 import { useId, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll } from 'framer-motion'
@@ -126,7 +129,7 @@ export function RepairDecision({ device }: { device: string }) {
   const { scrollYProgress } = useScroll({ target: root, offset: ['start .85', 'end .45'] })
   return <section ref={root} id="reparieren-oder-ersetzen" className="px-4 py-12 md:px-8 md:py-16">
     <div className="mx-auto max-w-[1280px] overflow-hidden rounded-[36px] border border-[#e7dfd2] bg-[#f1eadf]">
-      <SectionReveal><div className="p-7 text-center md:px-12 md:pb-10 md:pt-14"><p className="eyebrow">Reparieren oder ersetzen?</p><h2 className="section-title">Eine zweite Chance.<br /><span className="text-[#258454]">Wenn sie sinnvoll ist.</span></h2><p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-[#7b796c]">Bei Ihrem Gerät zählt das Zusammenspiel dieser drei Fragen. Die Diagnose schafft die Grundlage für Ihre Entscheidung.</p><ArrowDown size={20} className="mx-auto mt-6 text-[#258454]" /></div></SectionReveal>
+      <SectionReveal><div className="p-7 text-center md:px-12 md:pb-10 md:pt-14"><p className="eyebrow">Reparieren oder ersetzen?</p><h2 className="section-title"><FallingText text="Eine zweite Chance." /><FallingText text="Wenn sie sinnvoll ist." className="text-[#258454]" /></h2><p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-[#7b796c]">Bei Ihrem Gerät zählt das Zusammenspiel dieser drei Fragen. Die Diagnose schafft die Grundlage für Ihre Entscheidung.</p><ArrowDown size={20} className="mx-auto mt-6 text-[#258454]" /></div></SectionReveal>
       <div className="relative px-6 pb-8 md:px-12 md:pb-12">
         <div aria-hidden="true" className="absolute left-12 right-12 top-0 hidden h-px bg-[#d8ccba] md:block"><motion.div className="h-full origin-left bg-[#258454]" style={{ scaleX: reduced ? 1 : scrollYProgress }} /></div>
         <p className="mb-3 text-center text-[10px] tracking-wide text-[#7b796c]">Ordner öffnen und eine Karte auswählen.</p>

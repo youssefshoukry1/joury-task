@@ -1,3 +1,4 @@
+import WrenchWrittenHeading from '@/components/ui/wrench-written-heading'
 import { ArrowUpRight, MessagesSquare, Search, Wrench, Check } from 'lucide-react'
 
 const steps = [
@@ -11,7 +12,7 @@ export default function Process() {
     <section id="process" className="bg-[#faf9f6] px-4 py-14 md:px-8 md:py-20">
       <div className="mx-auto max-w-[1280px] rounded-[32px] border border-[#dce8df] bg-[#eaf3ec] p-6 md:rounded-[40px] md:p-12 lg:p-14">
         <div className="flex flex-wrap items-end justify-between gap-6">
-          <div><p className="eyebrow">So einfach geht’s</p><h2 className="section-title">Drei Schritte.<br /><span className="text-[#258454]">Ein gutes Gefühl.</span></h2></div>
+          <div><p className="eyebrow">So einfach geht’s</p><WrenchWrittenHeading /></div>
           <a href="#anfrage" className="gentle-button inline-flex items-center gap-3 rounded-full border border-[#bdd7c5] px-5 py-3 text-xs font-semibold text-[#21673e] transition-colors hover:bg-white">Mit dem ersten Schritt starten<ArrowUpRight size={16} /></a>
         </div>
         <ol className="mt-11 grid gap-7 md:grid-cols-3 md:gap-6">
