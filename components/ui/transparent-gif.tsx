@@ -59,6 +59,7 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, frames, 
     let stopped = false
     let visible = false
     let started = false
+    let animationFrame = 0
     let decoder: GifDecoder | undefined
     let timer: ReturnType<typeof setTimeout>
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -92,24 +93,53 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, frames, 
         const images = await Promise.all(pending)
         if (images.some(image => image === null)) throw new Error('HD sequence unavailable')
         if (stopped || reduced) return
-        let index = 1
-        const advance = () => {
+        // A time-based timeline avoids accumulated timer drift. Pause time and
+        // offscreen time do not advance the sequence.
+        let elapsed = 0
+        let previousTime = 0
+        const hold = 1000
+        const duration = Math.max(3200, (images.length - 1) * frameDuration)
+        const composite = document.createElement('canvas')
+        composite.width = element.width
+        composite.height = element.height
+        const blend = composite.getContext('2d')!
+        blend.imageSmoothingQuality = 'high'
+        const advance = (time: number) => {
           if (stopped) return
-          if (document.hidden || !visible || pausedRef.current) { timer = setTimeout(advance, 100); return }
-          if (!started) { started = true; timer = setTimeout(advance, 1000); return }
-          paint(images[index]!, index)
-          index += 1
-          if (index === images.length) { setFinished(true); return }
-          timer = setTimeout(advance, frameDuration)
+          const delta = previousTime ? Math.min(time - previousTime, 50) : 0
+          previousTime = time
+          if (!document.hidden && visible && !pausedRef.current) elapsed += delta
+          if (elapsed > hold) {
+            const t = Math.min((elapsed - hold) / duration, 1)
+            // Gentle acceleration and deceleration, without bouncing.
+            const eased = t * t * (3 - 2 * t)
+            const position = eased * (images.length - 1)
+            const index = Math.min(Math.floor(position), images.length - 1)
+            const next = Math.min(index + 1, images.length - 1)
+            const fraction = position - index
+            // Briefly soften each cut rather than dissolve for the whole frame.
+            const mix = Math.max(0, (fraction - .62) / .38)
+            if (mix > 0 && next !== index) {
+              blend.clearRect(0, 0, composite.width, composite.height)
+              blend.globalCompositeOperation = 'source-over'
+              blend.globalAlpha = 1 - mix
+              blend.drawImage(images[index]!, 0, 0, composite.width, composite.height)
+              blend.globalCompositeOperation = 'lighter'
+              blend.globalAlpha = mix
+              blend.drawImage(images[next]!, 0, 0, composite.width, composite.height)
+              blend.globalAlpha = 1
+              blend.globalCompositeOperation = 'source-over'
+              context.clearRect(0, 0, element.width, element.height)
+              context.drawImage(composite, 0, 0)
+              element.dataset.frame = String(index)
+            } else paint(images[index]!, index)
+            if (t === 1) { paint(images[images.length - 1]!, images.length - 1); setFinished(true); return }
+          }
+          animationFrame = requestAnimationFrame(advance)
         }
-        advance()
+        animationFrame = requestAnimationFrame(advance)
         return
       }
-      // Prepare the restored final frame before playback ends; leave the GIF's
-      // last frame visible if the larger asset cannot be loaded.
-      const sharpFrame = new Image()
-      sharpFrame.src = finalSrc
-      const sharpReady = sharpFrame.decode().then(() => sharpFrame).catch(() => null)
       const response = await fetch(src, { signal: controller.signal })
       if (!response.ok) throw new Error('GIF unavailable')
       decoder = new Decoder!({ data: await response.arrayBuffer(), type: 'image/gif' })
@@ -128,8 +158,10 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, frames, 
         const element = canvas.current
         const context = element?.getContext('2d', { willReadFrequently: true })
         if (!element || !context) { image.close(); return }
-        element.width = image.displayWidth
-        element.height = image.displayHeight
+        if (element.width !== image.displayWidth || element.height !== image.displayHeight) {
+          element.width = image.displayWidth
+          element.height = image.displayHeight
+        }
         context.drawImage(image, 0, 0)
         clearBackdrop(context, element.width, element.height)
         const duration = Math.max(20, (image.duration ?? 100000) / 1000)
@@ -137,14 +169,6 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, frames, 
         index += 1
         if (index >= decoder.tracks.selectedTrack.frameCount) {
           setFinished(true)
-          const restored = await sharpReady
-          if (!stopped && restored) {
-            element.width = restored.naturalWidth
-            element.height = restored.naturalHeight
-            context.imageSmoothingEnabled = true
-            context.imageSmoothingQuality = 'high'
-            context.drawImage(restored, 0, 0)
-          }
           return
         }
         if (!reduced) timer = setTimeout(() => void draw().catch(fail), index === 1 ? 0 : duration)
@@ -153,7 +177,7 @@ export default function TransparentGif({ src, alt, finalSrc, posterSrc, frames, 
     }
     function fail() { if (!stopped) setFallback(true) }
     void run().catch(fail)
-    return () => { stopped = true; observer.disconnect(); controller.abort(); clearTimeout(timer); decoder?.close() }
+    return () => { stopped = true; observer.disconnect(); controller.abort(); clearTimeout(timer); cancelAnimationFrame(animationFrame); decoder?.close() }
   }, [src, finalSrc, frames, frameDuration, aspectRatio])
 
   return <div className="relative">

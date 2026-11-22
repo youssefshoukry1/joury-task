@@ -4,7 +4,7 @@ import { ArrowRight, Check, ShieldCheck, Phone } from 'lucide-react'
 export default function RepairJourney() {
   return (
     <section aria-label="FixPro Reparaturservice" className="relative isolate overflow-hidden bg-[#071823] text-white">
-      <Image src="/images/repair-team-hero.png" alt="Zwei FixPro Servicetechniker bei der Reparatur einer Kaffeemaschine und einer Waschmaschine" fill priority sizes="100vw" className="-z-20 object-cover object-[65%_center] md:object-center" />
+      <Image src="/images/repair-team-hero-v2.png" alt="Zwei FixPro Servicetechniker bei der Reparatur einer Kaffeemaschine und einer Waschmaschine" fill priority sizes="100vw" className="-z-20 object-cover object-[65%_center] md:object-center" />
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,20,30,0.98)_0%,rgba(5,20,30,0.94)_28%,rgba(5,20,30,0.65)_50%,rgba(5,20,30,0.12)_80%)] max-md:bg-[linear-gradient(90deg,rgba(5,20,30,0.96),rgba(5,20,30,0.75))]" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-44 bg-gradient-to-t from-[#071823] to-transparent" />
       <div className="mx-auto max-w-[1320px] px-6 pb-16 pt-36 md:min-h-[740px] md:px-10 md:pb-20 md:pt-44 lg:px-12">

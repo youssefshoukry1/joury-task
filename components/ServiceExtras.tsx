@@ -56,15 +56,14 @@ export function ServiceInspection({ device }: { device: string }) {
         <p className="flex max-w-[230px] items-start gap-3 text-xs leading-6 text-[#a9c2b6]"><ScanLine size={22} className="mt-1 shrink-0 text-[#9de5b4]" />Wählen Sie einen Prüfpunkt und entdecken Sie, worauf wir achten.</p>
       </div>
       <div className="grid lg:grid-cols-[1.15fr_1fr]">
-        <div ref={imageRef} className="relative isolate flex min-h-[320px] items-center bg-[#dfebe2] p-5 sm:min-h-[440px] md:p-9">
-          <div className="relative aspect-square w-full">
+        <div ref={imageRef} className="relative isolate flex min-h-[320px] flex-col justify-center p-5 sm:min-h-[440px] md:p-8">
+          <div className="w-full overflow-hidden rounded-[26px] border border-[#b9d3c2] bg-[#e5efe7] p-3 shadow-[0_16px_40px_-28px_rgba(0,0,0,.55)] md:rounded-[30px] md:p-5"><div className="mb-2 flex items-center justify-between border-b border-[#bfd5c6]/60 px-2 pb-3"><span className="text-[10px] font-semibold uppercase tracking-[.16em] text-[#4b735a]">Bauteile im Detail</span><span className="rounded-full bg-white/70 px-3 py-1 text-[10px] text-[#42674e]">{device}</span></div><div className="relative aspect-square w-full">
             <div aria-hidden="true" className="absolute inset-[8%] rounded-full border border-[#77a68a]/20" />
             <div aria-hidden="true" className="absolute inset-[22%] rounded-full border border-[#77a68a]/20" />
             <Image src={`/images/${data.image}`} alt={`${device}: Bauteile und Prüfpunkte`} fill sizes="(max-width: 1024px) 90vw, 48vw" className="object-contain" />
             {data.points.map((item, index) => <motion.button key={item.title} type="button" aria-label={`${index + 1}. ${item.title}`} aria-pressed={selected === index} aria-controls={`${id}-detail`} onClick={() => setSelected(index)} style={{ left: `${item.x}%`, top: `${item.y}%` }} className={`absolute z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-[#dfebe2] text-xs font-bold shadow-md ${selected === index ? 'bg-[#174e32] text-white' : 'bg-white text-[#174e32]'}`} animate={{ scale: reduced || selected !== index ? 1 : [1, 1.15, 1] }} transition={{ duration: .5 }}>{index + 1}</motion.button>)}
-          </div>
+          </div><p className="px-2 pt-2 text-[10px] text-[#587861]">Prüfpunkt auswählen und Details entdecken.</p></div>
           <motion.div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-20 h-16 bg-gradient-to-b from-transparent via-[#56ae75]/20 to-transparent" initial={false} animate={visible && !reduced ? { top: ['0%', '85%'], opacity: [0, 1, 0] } : { top: '0%', opacity: 0 }} transition={{ duration: 2, ease: 'easeInOut' }} />
-          <span className="absolute bottom-4 left-5 rounded-full bg-white/85 px-3 py-2 text-[9px] text-[#466b53]">Illustrative Prüfpunkte · je nach Modell</span>
         </div>
         <div className="p-6 md:p-10">
           <div className="space-y-2">{data.points.map((item, index) => <button key={item.title} type="button" aria-expanded={selected === index} aria-controls={`${id}-detail`} onClick={() => setSelected(index)} className={`relative flex w-full items-center gap-4 overflow-hidden rounded-2xl border px-4 py-4 text-left transition-colors ${selected === index ? 'border-[#9de5b4]/50 bg-[#164333] hover:bg-[#205840]' : 'border-white/10 hover:bg-[#164333]'}`}><span className={`text-xs ${selected === index ? 'text-[#9de5b4]' : 'text-[#6f9583]'}`}>0{index + 1}</span><span className="flex-1 text-sm font-semibold">{item.title}</span><ChevronRight size={16} className={selected === index ? 'text-[#9de5b4]' : 'text-[#6f9583]'} /></button>)}</div>
