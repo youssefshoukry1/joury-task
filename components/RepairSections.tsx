@@ -3,9 +3,9 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import {
-  ArrowRight, ArrowUpRight, Check, CheckCheck,
+  ArrowRight, Check,
   ChevronDown, Headphones, Leaf, MapPin, MessageCircle,
-  Settings2, ShieldCheck, Wrench,
+  Settings2, ShieldCheck,
 } from 'lucide-react'
 
 const reasons = [
@@ -37,19 +37,41 @@ export function WhyChoose() {
 }
 
 export function ServicePreparation() {
-  const [checked, setChecked] = useState<boolean[]>([false, false, false])
-  const tasks = ['Marke und Modell notiert', 'Fehler kurz beschrieben', 'Foto vom Typenschild bereit']
+  const tasks = [
+    { label: 'Marke und Modell notiert', hint: 'Modellbezeichnung und Hersteller helfen bei der Einordnung.' },
+    { label: 'Fehler kurz beschrieben', hint: 'Was passiert und seit wann? Auch ein Fehlercode ist hilfreich.' },
+    { label: 'Foto vom Typenschild bereit', hint: 'Ein Foto ergänzt Ihre Beschreibung, wenn Sie es zur Hand haben.' },
+  ]
+  const [checked, setChecked] = useState([false, false, false])
   const complete = checked.filter(Boolean).length
+
   return (
     <section id="vorbereitung" className="section-space bg-white">
-      <div className="site-container grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-        <div><p className="eyebrow">Gut vorbereitet</p><h2 className="section-title">Weniger Rückfragen.<br />Mehr Klarheit.</h2><p className="mt-6 max-w-lg text-sm leading-7 text-stone-600">Mit ein paar Angaben können wir Ihre Anfrage besser einschätzen. Nutzen Sie die kleine Checkliste, bevor Sie uns schreiben.</p><ul className="mt-8 space-y-5">{[['Das richtige Gerät','Modellbezeichnung und Hersteller helfen bei der Einordnung.'],['Der genaue Fehler','Was passiert – und seit wann? Auch ein Fehlercode ist hilfreich.'],['Ein erster Eindruck','Ein Foto ergänzt Ihre Beschreibung, wenn Sie es zur Hand haben.']].map(([title, text]) => <li key={title} className="flex gap-4"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#eaf5ee]"><CheckCheck size={19} className="text-[#16804a]" /></span><div><h3 className="text-sm font-semibold">{title}</h3><p className="mt-1 text-xs leading-6 text-stone-500">{text}</p></div></li>)}</ul><a href="#contact" className="primary-button mt-8">Anfrage vorbereiten<ArrowRight size={17} /></a></div>
-        <div className="rounded-[32px] border border-[#dce8df] bg-[#eaf3ec] p-4 md:p-8">
-          <div className="rounded-2xl border border-[#dfe8e2] bg-white shadow-[0_20px_60px_-30px_rgba(8,30,41,.25)]">
-            <div className="flex items-center justify-between border-b border-stone-100 p-6"><span className="flex items-center gap-2 text-sm font-bold"><Wrench size={20} className="text-[#16804a]" />FixPro · Mein Gerät</span><span className="rounded-full bg-[#edf6ef] px-3 py-1 text-[10px] text-[#16804a]">Checkliste</span></div>
-            <div className="p-6"><div className="grid grid-cols-3 gap-3">{[[String(complete),'Erledigt'],[String(3-complete),'Noch offen'],['3','Schritte']].map(([value,label]) => <div key={label} className="rounded-xl bg-[#f6f8f6] px-3 py-4"><p className="text-2xl font-bold tracking-tight">{value}</p><p className="mt-1 text-[10px] text-stone-500">{label}</p></div>)}</div><div className="mt-6 flex items-center justify-between"><h3 className="text-sm font-semibold">Bereit für Ihre Anfrage?</h3><span className="text-xs text-stone-400">{complete}/3</span></div><div className="mt-4 h-1.5 overflow-hidden rounded-full bg-stone-100"><div className="h-full rounded-full bg-[#19a55d] transition-[width] motion-reduce:transition-none" style={{ width: `${complete / 3 * 100}%` }} /></div><div className="mt-5 space-y-3">{tasks.map((task,index) => <label key={task} className="flex cursor-pointer items-center gap-3 rounded-xl border border-stone-100 p-4 text-xs text-stone-700"><input type="checkbox" checked={checked[index]} onChange={() => setChecked(current => current.map((value,i) => i === index ? !value : value))} className="h-4 w-4 accent-[#16804a]" />{task}</label>)}</div><p className="mt-5 text-[10px] leading-5 text-stone-400" aria-live="polite">{complete === 3 ? 'Alles bereit. Beschreiben Sie uns jetzt Ihr Gerät.' : 'Ihre Checkliste bleibt nur in dieser geöffneten Seite.'}</p></div>
+      <div className="site-container">
+        <div className="rounded-[32px] bg-[#103329] px-5 py-8 text-white sm:px-8 lg:p-12">
+          <p className="text-sm font-semibold text-[#a9dcb9]">Gut vorbereitet</p>
+          <h2 className="section-title">Weniger Rückfragen. Mehr Klarheit.</h2>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-[#d0e2d6]">Mit ein paar Angaben können wir Ihre Anfrage besser einschätzen.</p>
+
+          <fieldset className="mt-8 min-w-0">
+            <legend className="text-base font-semibold">Checkliste für Ihre Anfrage</legend>
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {tasks.map(({ label, hint }, index) => (
+                <label key={label} className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/20 bg-white/5 p-4 has-[:checked]:border-[#a9dcb9] has-[:checked]:bg-white/10">
+                  <input type="checkbox" checked={checked[index]} onChange={() => setChecked(current => current.map((value, i) => i === index ? !value : value))} className="mt-1 h-5 w-5 shrink-0 accent-[#a9dcb9]" />
+                  <span>
+                    <span className="block font-semibold">{label}</span>
+                    <span className="mt-2 block text-sm leading-6 text-[#d0e2d6]">{hint}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <p className="text-sm text-[#d0e2d6]" aria-live="polite">{complete} von {tasks.length} erledigt{complete === tasks.length && ' · Alles bereit.'}</p>
+            <a href="#contact" className="rounded-lg bg-[#a9dcb9] px-5 py-3 text-sm font-semibold text-[#103329] transition-colors hover:bg-white">Anfrage vorbereiten</a>
           </div>
-          <p className="mt-4 text-center text-[10px] text-stone-500">Eine praktische Vorbereitungshilfe – kein Kundenkonto nötig.</p>
         </div>
       </div>
     </section>
@@ -74,8 +96,71 @@ const questions = [
   ['Kommt jemand zu mir nach Hause?', 'Teilen Sie uns Ihren Ort und das Gerät mit. Wir klären mit Ihnen, ob ein Vor-Ort-Termin oder eine andere Form der Übergabe möglich ist.'],
 ]
 
+const faqBrandStrips = [
+  ['Bosch', 'Miele', 'De’Longhi', 'Jura', 'JBL', 'Bose'],
+  ['Siemens', 'AEG', 'Saeco', 'Krups', 'Sony', 'Marshall'],
+]
+
+function FAQBrandStrip({ brands, descending, paused }: { brands: string[]; descending: boolean; paused: boolean }) {
+  return (
+    <div className="faq-brand-window">
+      <div className="faq-brand-track" style={{ animationDirection: descending ? 'reverse' : 'normal', animationPlayState: paused ? 'paused' : 'running' }}>
+        {[false, true].map(duplicate => (
+          <ul key={String(duplicate)} aria-hidden={duplicate || undefined} className="grid gap-3 pb-3">
+            {brands.map(brand => (
+              <li key={brand} className="flex min-h-[3.75rem] items-center justify-center rounded-xl border border-[#69877a]/60 bg-[#2b493d] px-2 text-center text-sm font-semibold tracking-wide text-[#dceee3] sm:text-base">
+                {brand}
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function FAQ() {
-  return <section id="faq" className="section-space bg-[#faf9f6]"><div className="site-container grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-20"><div><p className="eyebrow">Gut zu wissen</p><h2 className="section-title">Noch Fragen?<br />Ganz verständlich.</h2><p className="mt-6 max-w-sm text-sm leading-7 text-stone-600">Hier finden Sie Antworten auf die wichtigsten Fragen vor Ihrer ersten Anfrage.</p><a href="#contact" className="mt-7 inline-flex items-center gap-3 text-sm font-semibold text-[#16804a]">Persönlich nachfragen<ArrowUpRight size={17} /></a></div><div className="space-y-3">{questions.map(([question, answer], index) => <details key={question} name="homepage-faq" className="group rounded-2xl border border-[#e1e9e3] bg-white p-5 open:border-[#b9d8c3] open:bg-[#f4f9f5]" open={index === 0 ? true : undefined}><summary className="flex cursor-pointer list-none items-start gap-4 text-sm font-semibold leading-6 [&::-webkit-details-marker]:hidden"><span className="mt-0.5 font-mono text-[10px] text-[#16804a]">0{index + 1}</span><span className="flex-1">{question}</span><ChevronDown size={17} className="mt-1 shrink-0 text-stone-400 transition-transform group-open:rotate-180 motion-reduce:transition-none" /></summary><p className="mt-4 pl-8 text-sm leading-7 text-stone-600">{answer}</p></details>)}</div></div></section>
+  const [brandsPaused, setBrandsPaused] = useState(false)
+
+  return (
+    <section id="faq" className="section-space scroll-mt-20 bg-white text-[#17251d]" aria-labelledby="home-faq-title">
+      <div className="site-container">
+        <header className="mb-9 text-center">
+          <h2 id="home-faq-title" className="section-title">Noch Fragen?</h2>
+          <p className="mt-4 text-base leading-7 text-stone-600">Antworten auf die wichtigsten Fragen vor Ihrer ersten Anfrage.</p>
+        </header>
+        <div className="grid grid-cols-2 items-start gap-x-4 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)] lg:gap-x-12 xl:gap-x-16">
+          <aside aria-label="Markenbeispiele" className="col-span-2 row-start-2 grid grid-cols-2 gap-x-4 gap-y-2 lg:contents">
+            <div className="lg:col-start-1 lg:row-start-1">
+              <FAQBrandStrip brands={faqBrandStrips[0]} descending={false} paused={brandsPaused} />
+            </div>
+            <div className="lg:col-start-3 lg:row-start-1">
+              <FAQBrandStrip brands={faqBrandStrips[1]} descending paused={brandsPaused} />
+            </div>
+          </aside>
+          <div className="col-span-2 row-start-1 min-w-0 lg:col-span-1 lg:col-start-2">
+            <div className="overflow-hidden rounded-2xl border border-[#dce8df] bg-white">
+              {questions.map(([question, answer], index) => (
+                <details key={question} name="homepage-faq" className="group border-b border-[#dce8df] last:border-b-0 open:bg-[#f4f9f5]" open={index === 0 ? true : undefined}>
+                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 font-semibold leading-6 focus-visible:outline-[#16804a] focus-visible:-outline-offset-2 sm:px-5 [&::-webkit-details-marker]:hidden">
+                    {question}
+                    <ChevronDown aria-hidden="true" size={20} className="shrink-0 text-[#16804a] transition-transform group-open:rotate-180 motion-reduce:transition-none" />
+                  </summary>
+                  <p className="px-4 pb-5 text-base leading-7 text-stone-600 sm:px-5">{answer}</p>
+                </details>
+              ))}
+            </div>
+            <div className="mt-7 text-center">
+              <a href="#contact" className="text-sm font-semibold text-[#16804a] underline decoration-[#a9cbb5] underline-offset-4">Persönlich nachfragen</a>
+            </div>
+          </div>
+          <button type="button" onClick={() => setBrandsPaused(paused => !paused)} className="col-span-2 row-start-3 min-h-11 justify-self-center text-sm text-stone-600 underline underline-offset-4 hover:text-[#16804a] motion-reduce:hidden lg:col-start-2 lg:col-span-1 lg:row-start-2">
+            {brandsPaused ? 'Markenanimation fortsetzen' : 'Markenanimation pausieren'}
+          </button>
+        </div>
+      </div>
+    </section>
+  )
 }
 
 export { default as ServiceArea } from "@/components/ui/contact-with-globe"
